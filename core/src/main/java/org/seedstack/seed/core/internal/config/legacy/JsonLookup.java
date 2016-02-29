@@ -5,14 +5,14 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package org.seedstack.seed.core.internal.application;
+package org.seedstack.seed.core.internal.config.legacy;
 
 import com.jayway.jsonpath.JsonPath;
 import org.apache.commons.configuration.AbstractConfiguration;
+import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.lang.text.StrLookup;
 import org.apache.commons.lang.text.StrSubstitutor;
-import org.seedstack.seed.Application;
 import org.seedstack.seed.spi.configuration.ConfigurationLookup;
 
 import java.util.regex.Pattern;
@@ -32,11 +32,11 @@ public class JsonLookup extends StrLookup {
     /**
      * Creates the lookup.
      *
-     * @param application the application.
+     * @param configuration the legacy configuration.
      */
-    public JsonLookup(Application application) {
-        this.interpolator = ((AbstractConfiguration) application.getConfiguration()).getInterpolator();
-        this.substitutor = ((AbstractConfiguration) application.getConfiguration()).getSubstitutor();
+    public JsonLookup(Configuration configuration) {
+        this.interpolator = ((AbstractConfiguration) configuration).getInterpolator();
+        this.substitutor = ((AbstractConfiguration) configuration).getSubstitutor();
     }
 
     @Override

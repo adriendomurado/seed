@@ -138,10 +138,8 @@ public class TransactionPluginTest {
     private InitContext mockInitContext(Class<?> transactionManagerClass, String transactionHandlerClass) {
         InitContext initContext = mock(InitContext.class);
         Configuration configuration = mock(Configuration.class);
-        ApplicationPlugin applicationPlugin = mock(ApplicationPlugin.class);
-        Application application = mock(Application.class);
-        when(applicationPlugin.getApplication()).thenReturn(application);
-        when(application.getConfiguration()).thenReturn(configuration);
+        ConfigurationProvider configurationProvider = mock(ConfigurationProvider.class);
+        when(configurationProvider.getConfiguration()).thenReturn(configuration);
         when(configuration.subset(TransactionPlugin.TRANSACTION_PLUGIN_CONFIGURATION_PREFIX)).thenReturn(configuration);
         if (transactionManagerClass != null) {
             when(configuration.subset(TransactionPlugin.TRANSACTION_PLUGIN_CONFIGURATION_PREFIX).getString("manager")).thenReturn(
@@ -159,8 +157,7 @@ public class TransactionPluginTest {
         implementsTransactionMetadataResolverClasses.add(TransactionMetadataResolverTestImpl.class);
         mapImplements.put(TransactionMetadataResolver.class, implementsTransactionMetadataResolverClasses);
         when(initContext.scannedSubTypesByParentClass()).thenReturn(mapImplements);
-        when(initContext.dependency(ConfigurationProvider.class)).thenReturn(applicationPlugin);
-        when(applicationPlugin.getConfiguration()).thenReturn(configuration);
+        when(initContext.dependency(ConfigurationProvider.class)).thenReturn(configurationProvider);
         return initContext;
     }
 

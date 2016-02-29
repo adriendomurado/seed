@@ -101,9 +101,20 @@ public class DiagnosticManagerIT {
         assertThat(applicationInfo.get("name")).isNotNull();
         assertThat(applicationInfo.get("version")).isNotNull();
         assertThat(applicationInfo.get("storage-location")).isNull();
-        assertThat(applicationInfo.get("base-packages")).isNotNull();
-        assertThat(applicationInfo.get("active-profiles")).isNotNull();
-        assertThat(applicationInfo.get("configuration")).isNotNull();
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void legacy_configuration_information_is_present() {
+        Map<String, Object> diagnosticInfo = holder.diagnosticManager.getDiagnosticInfo(null);
+
+        assertThat(diagnosticInfo).isNotNull();
+        Map<String, Object> legacyConfigInfo = (Map<String, Object>) diagnosticInfo.get("org.seedstack.seed.core.legacy-config");
+
+        assertThat(legacyConfigInfo).isNotNull();
+        assertThat(legacyConfigInfo.get("base-packages")).isNotNull();
+        assertThat(legacyConfigInfo.get("active-profiles")).isNotNull();
+        assertThat(legacyConfigInfo.get("configuration")).isNotNull();
     }
 
     @Test

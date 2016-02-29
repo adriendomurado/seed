@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package org.seedstack.seed.core.internal.application;
+package org.seedstack.seed.core.internal.config.legacy;
 
 import com.google.inject.MembersInjector;
 import org.seedstack.seed.ErrorCode;
@@ -74,7 +74,7 @@ class ConfigurationMembersInjector<T> implements MembersInjector<T> {
         // Pre verification
         if(enumerate == null){
             LOGGER.warn("Unable to find enum {}.{} in @Configuration annotation on field {}.{}", annotation.errorCodeClass().getSimpleName(), annotation.errorCodeName(), field.getDeclaringClass().getCanonicalName(), field.getName());
-            enumerate = ApplicationErrorCode.CONFIGURATION_ERROR;
+            enumerate = LegacyConfigErrorCode.CONFIGURATION_ERROR;
         }
         if (!configuration.containsKey(configurationParameterName) && annotation.mandatory() && annotation.defaultValue().length == 0) {
             throw SeedException.createNew((ErrorCode) enumerate).put("property", configurationParameterName).put("field", field.getName()).put("class", field.getDeclaringClass().getCanonicalName());
@@ -90,7 +90,7 @@ class ConfigurationMembersInjector<T> implements MembersInjector<T> {
     private Enum<? extends ErrorCode> findEnum(){
         Class<? extends Enum<? extends ErrorCode>> errorCodeClass = annotation.errorCodeClass();
         if (errorCodeClass.equals(org.seedstack.seed.Configuration.ConfigurationErrorCode.class)) {
-            errorCodeClass = ApplicationErrorCode.class;
+            errorCodeClass = LegacyConfigErrorCode.class;
         }
 
         for (Enum<? extends ErrorCode> enumElement : errorCodeClass.getEnumConstants()) {
@@ -160,7 +160,7 @@ class ConfigurationMembersInjector<T> implements MembersInjector<T> {
                 try {
                     convertedValues = (Object[])Array.newInstance(field.getType().getComponentType(), values.length);
                 } catch(Exception e) {
-                    throw SeedException.wrap(e, ApplicationErrorCode.UNABLE_TO_INSTANTIATE_CONFIGURATION_ARRAY);
+                    throw SeedException.wrap(e, LegacyConfigErrorCode.UNABLE_TO_INSTANTIATE_CONFIGURATION_ARRAY);
                 }
 
                 for (int i = 0; i < values.length; i++) {
@@ -177,7 +177,7 @@ class ConfigurationMembersInjector<T> implements MembersInjector<T> {
         try {
             FieldUtils.writeField(field, instance, convertedValues, true);
         } catch (IllegalAccessException ex) {
-            throw SeedException.wrap(ex, ApplicationErrorCode.FIELD_ILLEGAL_ACCESS).put("class", instance.getClass()).put("field", field.getName());
+            throw SeedException.wrap(ex, LegacyConfigErrorCode.FIELD_ILLEGAL_ACCESS).put("class", instance.getClass()).put("field", field.getName());
         }
     }
 
@@ -192,15 +192,15 @@ class ConfigurationMembersInjector<T> implements MembersInjector<T> {
                 } else if (converters.containsKey(type)) {
                     return converters.get(type).newInstance();
                 } else {
-                    throw SeedException.createNew(ApplicationErrorCode.CONVERTER_NOT_COMPATIBLE).put("class", instance.getClass()).put("field", field.getName()).put("fieldType", type);
+                    throw SeedException.createNew(LegacyConfigErrorCode.CONVERTER_NOT_COMPATIBLE).put("class", instance.getClass()).put("field", field.getName()).put("fieldType", type);
                 }
             } else {
                 return converterClass.newInstance();
             }
         } catch (InstantiationException ex) {
-            throw SeedException.wrap(ex, ApplicationErrorCode.CONVERTER_INSTANTIATION).put("class", instance.getClass()).put("field", field.getName()).put("converterClass", converterClass);
+            throw SeedException.wrap(ex, LegacyConfigErrorCode.CONVERTER_INSTANTIATION).put("class", instance.getClass()).put("field", field.getName()).put("converterClass", converterClass);
         } catch (IllegalAccessException ex) {
-            throw SeedException.wrap(ex, ApplicationErrorCode.CONVERTER_CONSTRUCTOR_ILLEGAL_ACCESS).put("class", instance.getClass()).put("field", field.getName()).put("converterClass", converterClass);
+            throw SeedException.wrap(ex, LegacyConfigErrorCode.CONVERTER_CONSTRUCTOR_ILLEGAL_ACCESS).put("class", instance.getClass()).put("field", field.getName()).put("converterClass", converterClass);
         }
     }
 

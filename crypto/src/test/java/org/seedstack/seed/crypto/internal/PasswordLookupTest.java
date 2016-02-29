@@ -19,7 +19,6 @@ import mockit.Mocked;
 import org.apache.commons.configuration.Configuration;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
-import org.seedstack.seed.Application;
 import org.seedstack.seed.SeedException;
 import org.seedstack.seed.crypto.EncryptionService;
 
@@ -38,8 +37,6 @@ public class PasswordLookupTest {
     private static final String cryptingString = DatatypeConverter.printHexBinary(toDecrypt.getBytes());
 
     @Mocked
-    private Application application;
-    @Mocked
     private Configuration configuration;
     @Mocked
     private EncryptionServiceFactory encryptionServiceFactory;
@@ -55,13 +52,13 @@ public class PasswordLookupTest {
 
     @Test
     public void testLookupWithoutMasterKeyStore() throws Exception {
-        PasswordLookup lookup = new PasswordLookup(application);
+        PasswordLookup lookup = new PasswordLookup(configuration);
         Assertions.assertThat(lookup).isNotNull();
     }
 
     @Test(expected = SeedException.class)
     public void testLookupDecryptWithoutMasterKeyStore() throws Exception {
-        PasswordLookup lookup = new PasswordLookup(application);
+        PasswordLookup lookup = new PasswordLookup(configuration);
         lookup.lookup("");
     }
 
@@ -76,7 +73,7 @@ public class PasswordLookupTest {
             }
         };
 
-        PasswordLookup lookup = new PasswordLookup(application);
+        PasswordLookup lookup = new PasswordLookup(configuration);
         Assertions.assertThat(lookup.lookup(cryptingString)).isEqualTo(toDecrypt);
     }
 
@@ -97,7 +94,7 @@ public class PasswordLookupTest {
                 result = keyStore;
             }
         };
-        new PasswordLookup(application);
+        new PasswordLookup(configuration);
     }
 
     @Test(expected = SeedException.class)
@@ -111,7 +108,7 @@ public class PasswordLookupTest {
             }
         };
 
-        PasswordLookup lookup = new PasswordLookup(application);
+        PasswordLookup lookup = new PasswordLookup(configuration);
         lookup.lookup(cryptingString);
     }
 

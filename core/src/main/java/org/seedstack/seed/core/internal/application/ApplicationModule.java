@@ -8,7 +8,6 @@
 package org.seedstack.seed.core.internal.application;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.matcher.Matchers;
 import org.seedstack.seed.Application;
 
 /**
@@ -26,7 +25,6 @@ class ApplicationModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(Application.class).toInstance(this.application);
-        bindListener(Matchers.any(), new ConfigurationTypeListener(this.application.getConfiguration()));
     }
 
 }

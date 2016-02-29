@@ -54,37 +54,47 @@ public interface Application {
     /**
      * Return the DOT format of the application injector graph filtered by filter regular expression.
      *
+     * @deprecated
      * @param filter the filtering regular expression.
      * @return the DOT formatted graph definition.
      */
+    @Deprecated
     String getInjectionGraph(String filter);
 
     /**
      * Return the DOT format of the application injector graph unfiltered.
      *
+     * @deprecated
      * @return the DOT formatted graph definition.
      */
+    @Deprecated
     String getInjectionGraph();
 
     /**
      * Return the application global configuration.
      *
+     * @deprecated
      * @return the configuration
      */
+    @Deprecated
     org.apache.commons.configuration.Configuration getConfiguration();
 
     /**
      * Looks for eventual props configuration for a class.
      *
+     * @deprecated
      * @return the configuration map
      */
+    @Deprecated
     org.apache.commons.configuration.Configuration getConfiguration(Class<?> clazz);
 
     /**
      * Substitute any ${...} expression in the given string with the configuration values.
      *
+     * @deprecated
      * @param value the string to substitute.
      * @return the substituted string.
      */
+    @Deprecated
     String substituteWithConfiguration(String value);
 }

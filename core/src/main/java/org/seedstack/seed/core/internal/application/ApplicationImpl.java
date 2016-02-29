@@ -7,27 +7,14 @@
  */
 package org.seedstack.seed.core.internal.application;
 
-import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableMap;
-import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
-import com.google.inject.grapher.NameFactory;
-import com.google.inject.grapher.ShortNameFactory;
-import com.google.inject.grapher.graphviz.PortIdFactory;
-import com.google.inject.grapher.graphviz.PortIdFactoryImpl;
 import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.MapConfiguration;
 import org.seedstack.seed.Application;
 import org.seedstack.seed.SeedException;
+import org.seedstack.seed.core.spi.configuration.ConfigurationProvider;
 
 import javax.inject.Inject;
 import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * Implementation of the {@link Application} interface.
@@ -35,18 +22,16 @@ import java.util.Map;
  * @author adrien.lauer@mpsa.com
  */
 class ApplicationImpl implements Application {
-    private static final String REGEX_FOR_SUBPACKAGE = "(.*)\\.([^.]*)$";
-
     private final ApplicationInfo applicationInfo;
     private final File storageRoot;
-    private final MapConfiguration configuration;
+    private final ConfigurationProvider configurationProvider;
 
     @Inject
     private Injector injector;
 
-    public ApplicationImpl(ApplicationInfo applicationInfo, MapConfiguration configuration, File seedStorage) {
+    public ApplicationImpl(ApplicationInfo applicationInfo, ConfigurationProvider configurationProvider, File seedStorage) {
         this.applicationInfo = applicationInfo;
-        this.configuration = configuration;
+        this.configurationProvider = configurationProvider;
         this.storageRoot = seedStorage;
     }
 
@@ -90,30 +75,7 @@ class ApplicationImpl implements Application {
 
     @Override
     public String getInjectionGraph(String filter) {
-        Injector graphvizInjector = injector.createChildInjector(new AbstractModule() {
-            @Override
-            protected void configure() {
-                bind(NameFactory.class).to(ShortNameFactory.class);
-                bind(PortIdFactory.class).to(PortIdFactoryImpl.class);
-                bind(SeedGraphvizGrapher.class);
-            }
-        });
-
-        SeedGraphvizGrapher grapher = graphvizInjector.getInstance(SeedGraphvizGrapher.class);
-        StringWriter result = new StringWriter();
-
-        grapher.setOut(new PrintWriter(result));
-        if (!Strings.isNullOrEmpty(filter)) {
-            grapher.setFilter(filter);
-        }
-
-        try {
-            grapher.graph(this.injector);
-        } catch (IOException e) {
-            throw SeedException.wrap(e, ApplicationErrorCode.UNABLE_TO_GENERATE_INJECTION_GRAPH);
-        }
-
-        return result.getBuffer().toString();
+        throw new UnsupportedOperationException("Injection graph is no longer supported in core");
     }
 
     @Override
@@ -123,62 +85,16 @@ class ApplicationImpl implements Application {
 
     @Override
     public Configuration getConfiguration() {
-        return this.configuration;
+        return configurationProvider.getConfiguration();
     }
 
     @Override
     public Configuration getConfiguration(Class<?> clazz) {
-        return new MapConfiguration(ImmutableMap.<String, Object>copyOf(getEntityConfiguration(clazz.getName())));
+        return configurationProvider.getConfiguration(clazz);
     }
 
     @Override
     public String substituteWithConfiguration(String value) {
-        return configuration.getSubstitutor().replace(value);
-    }
-
-    /**
-     * Merge property from props section recursively starting by the atomic
-     * parent package section coming from entity class name. Properties can be
-     * overwritten by using the same key on the subpackage(s) section.
-     *
-     * @param key props section name
-     */
-    private void mergeEntityPackageConfiguration(String key, Map<String, String> entityConfiguration) {
-        if (key.matches(REGEX_FOR_SUBPACKAGE)) {
-            mergeEntityPackageConfiguration(
-                    key.replaceFirst(REGEX_FOR_SUBPACKAGE, "$1*"),
-                    entityConfiguration);
-        }
-        Configuration configuration = this.configuration.subset(
-                key.replace("*", ".*"));
-        if (!configuration.isEmpty()) {
-            Iterator<String> keys = configuration.getKeys();
-            while (keys.hasNext()) {
-                String propertyKey = keys.next();
-                entityConfiguration.put(propertyKey,
-                        configuration.getString(propertyKey));
-            }
-        }
-    }
-
-    /**
-     * Merge property from props section recursively starting by "*" section.
-     *
-     * @param key props section name
-     * @return configuration map
-     */
-    private Map<String, String> getEntityConfiguration(String key) {
-        Configuration configuration = this.configuration.subset("*");
-        Map<String, String> entityConfig = new HashMap<String, String>();
-        if (!configuration.isEmpty()) {
-            Iterator<String> keys = configuration.getKeys();
-            while (keys.hasNext()) {
-                String propertyKey = keys.next();
-                entityConfig.put(propertyKey,
-                        configuration.getString(propertyKey));
-            }
-        }
-        mergeEntityPackageConfiguration(key, entityConfig);
-        return entityConfig;
+        return configurationProvider.substituteWithConfiguration(value);
     }
 }

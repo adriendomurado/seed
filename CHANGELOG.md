@@ -1,3 +1,7 @@
+# Version 3.3.0 (2016-?-?)
+
+* [brk] `storage` configuration lookup has been removed.
+
 # Version 2.3.0 (2016-04-25)
 
 * [new] Full compatibility with Java 8.

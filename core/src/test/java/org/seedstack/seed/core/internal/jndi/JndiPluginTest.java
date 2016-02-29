@@ -18,6 +18,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.seedstack.seed.core.internal.CorePlugin;
 import org.seedstack.seed.core.internal.application.ApplicationPlugin;
+import org.seedstack.seed.core.internal.config.legacy.LegacyConfigPlugin;
 import org.seedstack.seed.core.spi.configuration.ConfigurationProvider;
 
 import javax.naming.Context;
@@ -70,9 +71,9 @@ public class JndiPluginTest {
 		when(configuration.subset(CorePlugin.CORE_PLUGIN_PREFIX)).thenReturn(configuration);
 		when(configuration.getStringArray("additional-jndi-contexts")).thenReturn(new String[]{nameTolookup});
 		when(configuration.getString("additional-jndi-context.test1")).thenReturn("/jndi-test1.properties");
-		ApplicationPlugin applicationPlugin = mock(ApplicationPlugin.class);
-		when(initContext.dependency(ConfigurationProvider.class)).thenReturn(applicationPlugin);
-        when(applicationPlugin.getConfiguration()).thenReturn(configuration);
+		LegacyConfigPlugin legacyConfigPlugin = mock(LegacyConfigPlugin.class);
+		when(initContext.dependency(ConfigurationProvider.class)).thenReturn(legacyConfigPlugin);
+        when(legacyConfigPlugin.getConfiguration()).thenReturn(configuration);
 		return initContext;
 	}
 

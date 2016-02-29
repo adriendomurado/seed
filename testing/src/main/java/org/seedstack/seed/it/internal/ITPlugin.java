@@ -18,6 +18,8 @@ import io.nuun.kernel.core.AbstractPlugin;
 import org.kametic.specifications.Specification;
 import org.seedstack.seed.SeedException;
 import org.seedstack.seed.core.internal.application.ApplicationPlugin;
+import org.seedstack.seed.core.internal.config.legacy.LegacyConfigPlugin;
+import org.seedstack.seed.core.spi.configuration.ConfigurationProvider;
 import org.seedstack.seed.it.ITBind;
 import org.seedstack.seed.it.ITInstall;
 import org.slf4j.Logger;
@@ -60,7 +62,7 @@ public class ITPlugin extends AbstractPlugin {
     @SuppressWarnings({"rawtypes", "unchecked"})
     public InitState init(InitContext initContext) {
         String itClassName = initContext.kernelParam(IT_CLASS_NAME);
-        Map<String, String> defaultConfiguration = initContext.dependency(ApplicationPlugin.class).getDefaultConfiguration();
+        Map<String, String> defaultConfiguration = initContext.dependency(ConfigurationProvider.class).getDefaultConfiguration();
 
         // Create temporary directory for application storage
         temporaryAppStorage = Files.createTempDir();
@@ -141,7 +143,7 @@ public class ITPlugin extends AbstractPlugin {
 
     @Override
     public Collection<Class<?>> dependentPlugins() {
-        return Lists.<Class<?>>newArrayList(ApplicationPlugin.class);
+        return Lists.<Class<?>>newArrayList(ConfigurationProvider.class);
     }
 
     private void deleteRecursively(final File file) throws IOException {

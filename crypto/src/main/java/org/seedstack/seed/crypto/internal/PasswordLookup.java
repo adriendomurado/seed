@@ -12,10 +12,9 @@ package org.seedstack.seed.crypto.internal;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.lang.text.StrLookup;
-import org.seedstack.seed.Application;
 import org.seedstack.seed.SeedException;
-import org.seedstack.seed.spi.configuration.ConfigurationLookup;
 import org.seedstack.seed.crypto.EncryptionService;
+import org.seedstack.seed.spi.configuration.ConfigurationLookup;
 
 import javax.xml.bind.DatatypeConverter;
 import java.security.InvalidKeyException;
@@ -35,8 +34,8 @@ public class PasswordLookup extends StrLookup {
 
     private final EncryptionService encryptionService;
 
-    public PasswordLookup(Application application) {
-        Configuration cryptoConfig = application.getConfiguration().subset(CryptoPlugin.CONFIG_PREFIX);
+    public PasswordLookup(Configuration configuration) {
+        Configuration cryptoConfig = configuration.subset(CryptoPlugin.CONFIG_PREFIX);
         if (cryptoConfig.containsKey(CryptoPlugin.MASTER_KEYSTORE_PATH)) {
             KeyStoreConfig ksConfig = new KeyStoreConfigFactory(cryptoConfig).create(MASTER_KEYSTORE_NAME);
             KeyStore keyStore = new KeyStoreLoader().load(ksConfig);
@@ -45,7 +44,7 @@ public class PasswordLookup extends StrLookup {
                 throw SeedException.createNew(CryptoErrorCodes.MISSING_MASTER_KEY_PASSWORD);
             }
             char[] password = pass.toCharArray();
-            encryptionService = new EncryptionServiceFactory(application.getConfiguration(), keyStore).create(MASTER_KEY_NAME, password);
+            encryptionService = new EncryptionServiceFactory(configuration, keyStore).create(MASTER_KEY_NAME, password);
         } else {
             encryptionService = null;
         }
