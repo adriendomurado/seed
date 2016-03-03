@@ -7,6 +7,8 @@
  */
 package org.seedstack.seed.cli;
 
+import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -19,6 +21,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class WithWithCommandLineIT extends AbstractSeedIT {
     private static boolean passedBeforeClass = false;
     private static boolean passedBefore = false;
+    private static boolean passedAfter = false;
+    private static boolean passedAfterClass = false;
 
     @Inject
     private Fixture fixture;
@@ -28,6 +32,8 @@ public class WithWithCommandLineIT extends AbstractSeedIT {
         assertThat(passedBeforeClass).isFalse();
         assertThat(passedBefore).isFalse();
         assertThat(DummyCommandLineHandler.called).isFalse();
+        assertThat(passedAfter).isFalse();
+        assertThat(passedAfterClass).isFalse();
         passedBeforeClass = true;
     }
 
@@ -36,7 +42,29 @@ public class WithWithCommandLineIT extends AbstractSeedIT {
         assertThat(passedBeforeClass).isTrue();
         assertThat(passedBefore).isFalse();
         assertThat(DummyCommandLineHandler.called).isFalse();
+        assertThat(passedAfter).isFalse();
+        assertThat(passedAfterClass).isFalse();
         passedBefore = true;
+    }
+
+    @After
+    public void after() {
+        assertThat(passedBeforeClass).isTrue();
+        assertThat(passedBefore).isTrue();
+        assertThat(DummyCommandLineHandler.called).isTrue();
+        assertThat(passedAfter).isFalse();
+        assertThat(passedAfterClass).isFalse();
+        passedAfter = true;
+    }
+
+    @AfterClass
+    public static void afterClass() {
+        assertThat(passedBeforeClass).isTrue();
+        assertThat(passedBefore).isTrue();
+        assertThat(DummyCommandLineHandler.called).isTrue();
+        assertThat(passedAfter).isTrue();
+        assertThat(passedAfterClass).isFalse();
+        passedAfterClass = true;
     }
 
     @Test
