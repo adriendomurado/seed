@@ -2,10 +2,10 @@ package org.seedstack.seed.core.internal.config.legacy;
 
 import org.apache.commons.configuration.Configuration;
 import org.seedstack.coffig.data.MapNode;
+import org.seedstack.coffig.data.MutableMapNode;
+import org.seedstack.coffig.data.MutableTreeNode;
 import org.seedstack.coffig.data.TreeNode;
 import org.seedstack.coffig.data.ValueNode;
-import org.seedstack.coffig.data.mutable.MutableMapNode;
-import org.seedstack.coffig.data.mutable.MutableTreeNode;
 import org.seedstack.coffig.spi.ConfigurationProvider;
 
 import java.util.ArrayList;

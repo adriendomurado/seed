@@ -57,5 +57,6 @@ public class LegacyConfigurationProviderTest {
         assertThat(provide.search("jpa.units.unit1.user").value()).isEqualTo("user1");
         assertThat(provide.search("jpa.units.unit2.url").value()).isEqualTo("url2");
         assertThat(provide.search("jpa.units.unit2.user").value()).isEqualTo("user2");
+        System.out.println(provide);
     }
 }
