@@ -53,9 +53,9 @@ public class LegacyConfigurationProviderTest {
     @Test
     public void multi_key_conversion_is_correctly_handled() throws Exception {
         MapNode provide = underTest.provide();
-        assertThat(provide.search("jpa.units.0.url").value()).isEqualTo("url1");
-        assertThat(provide.search("jpa.units.0.user").value()).isEqualTo("user1");
-        assertThat(provide.search("jpa.units.1.url").value()).isEqualTo("url2");
-        assertThat(provide.search("jpa.units.1.user").value()).isEqualTo("user2");
+        assertThat(provide.search("jpa.units.unit1.url").value()).isEqualTo("url1");
+        assertThat(provide.search("jpa.units.unit1.user").value()).isEqualTo("user1");
+        assertThat(provide.search("jpa.units.unit2.url").value()).isEqualTo("url2");
+        assertThat(provide.search("jpa.units.unit2.user").value()).isEqualTo("user2");
     }
 }
