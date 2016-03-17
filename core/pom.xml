@@ -38,7 +38,12 @@
         <dependency>
             <groupId>com.google.inject.extensions</groupId>
             <artifactId>guice-grapher</artifactId>
-            <version>4.0</version>
+            <version>${guice.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.seedstack.coffig</groupId>
+            <artifactId>coffig</artifactId>
+            <version>${coffig.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
