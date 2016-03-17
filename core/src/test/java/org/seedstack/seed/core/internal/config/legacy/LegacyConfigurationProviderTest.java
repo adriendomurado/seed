@@ -1,10 +1,17 @@
+/**
+ * Copyright (c) 2013-2016, The SeedStack authors <http://seedstack.org>
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 package org.seedstack.seed.core.internal.config.legacy;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.MapConfiguration;
 import org.junit.Before;
 import org.junit.Test;
-import org.seedstack.coffig.data.MapNode;
+import org.seedstack.coffig.MapNode;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,26 +44,26 @@ public class LegacyConfigurationProviderTest {
 
     @Test
     public void simple_key_is_correctly_mapped() throws Exception {
-        assertThat(underTest.provide().search("custom.property.key").value()).isEqualTo("test-custom-property-value");
+        assertThat(underTest.provide().get("custom.property.key").value()).isEqualTo("test-custom-property-value");
     }
 
     @Test
     public void seed_key_is_stripped() throws Exception {
-        assertThat(underTest.provide().search("core.application-id").value()).isEqualTo("test-app-id");
+        assertThat(underTest.provide().get("core.application-id").value()).isEqualTo("test-app-id");
     }
 
     @Test
     public void multi_value_key_is_correctly_handled() throws Exception {
-        assertThat(underTest.provide().search("test.values").value()).isEqualTo("value1,value2,value3");
+        assertThat(underTest.provide().get("test.values").value()).isEqualTo("value1,value2,value3");
     }
 
     @Test
     public void multi_key_conversion_is_correctly_handled() throws Exception {
         MapNode provide = underTest.provide();
-        assertThat(provide.search("jpa.units.unit1.url").value()).isEqualTo("url1");
-        assertThat(provide.search("jpa.units.unit1.user").value()).isEqualTo("user1");
-        assertThat(provide.search("jpa.units.unit2.url").value()).isEqualTo("url2");
-        assertThat(provide.search("jpa.units.unit2.user").value()).isEqualTo("user2");
+        assertThat(provide.get("jpa.units.unit1.url").value()).isEqualTo("url1");
+        assertThat(provide.get("jpa.units.unit1.user").value()).isEqualTo("user1");
+        assertThat(provide.get("jpa.units.unit2.url").value()).isEqualTo("url2");
+        assertThat(provide.get("jpa.units.unit2.user").value()).isEqualTo("user2");
         System.out.println(provide);
     }
 }

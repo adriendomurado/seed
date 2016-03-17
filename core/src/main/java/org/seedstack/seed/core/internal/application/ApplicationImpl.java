@@ -75,7 +75,7 @@ class ApplicationImpl implements Application {
 
     @Override
     public String getInjectionGraph(String filter) {
-        throw new UnsupportedOperationException("Injection graph is no longer supported in core");
+        throw new UnsupportedOperationException("Injection graph dump is no longer supported in core");
     }
 
     @Override

@@ -68,21 +68,6 @@ public class ConfigurationIT {
     }
 
     @Test
-    public void injector_graphing_is_working_correctly() throws Exception {
-        Kernel kernel = Seed.createKernel();
-
-        try {
-            Holder holder = getHolder(kernel);
-            String injectorGraph = holder.application.getInjectionGraph(null);
-
-            Assertions.assertThat(injectorGraph).isNotNull();
-            Assertions.assertThat(injectorGraph).isNotEmpty();
-        } finally {
-            Seed.disposeKernel(kernel);
-        }
-    }
-
-    @Test
     public void configuration_can_be_retrieved() {
         Kernel kernel = Seed.createKernel();
 
