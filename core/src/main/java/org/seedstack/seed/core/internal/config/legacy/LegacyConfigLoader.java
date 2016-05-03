@@ -16,8 +16,6 @@ import org.javatuples.Pair;
 import org.seedstack.seed.SeedException;
 import org.seedstack.seed.core.internal.CoreErrorCode;
 import org.seedstack.seed.core.utils.SeedReflectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -37,7 +35,6 @@ import java.util.Set;
 public class LegacyConfigLoader {
     private static final String SEED_BOOTSTRAP_PROPS_PATH = "META-INF/configuration/seed.props";
     private static final String SEED_BOOTSTRAP_PROPERTIES_PATH = "META-INF/configuration/seed.properties";
-    private static final Logger LOGGER = LoggerFactory.getLogger(LegacyConfigLoader.class);
 
     /**
      * Build the configuration needed to bootstrap a Seed application.
@@ -81,10 +78,8 @@ public class LegacyConfigLoader {
                         resourceAsStream = url.openStream();
 
                         if (isOverrideResource(configurationResource)) {
-                            LOGGER.debug("Adding {} to configuration override", url.toExternalForm());
                             propsOverride.load(resourceAsStream);
                         } else {
-                            LOGGER.debug("Adding {} to configuration", url.toExternalForm());
                             props.load(resourceAsStream);
                         }
                     } finally {
@@ -92,7 +87,7 @@ public class LegacyConfigLoader {
                             try {
                                 resourceAsStream.close();
                             } catch (IOException e) {
-                                LOGGER.warn("Unable to close configuration resource " + configurationResource, e);
+                                // nothing to do
                             }
                         }
                     }

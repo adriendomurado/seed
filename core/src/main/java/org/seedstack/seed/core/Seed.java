@@ -14,13 +14,13 @@ import io.nuun.kernel.api.Plugin;
 import io.nuun.kernel.api.config.KernelConfiguration;
 import io.nuun.kernel.core.NuunCore;
 import org.apache.commons.configuration.Configuration;
+import org.seedstack.coffig.Coffig;
 import org.seedstack.seed.DiagnosticManager;
 import org.seedstack.seed.SeedRuntime;
 import org.seedstack.seed.core.internal.init.ConsoleManager;
 import org.seedstack.seed.core.internal.init.DiagnosticManagerImpl;
 import org.seedstack.seed.core.internal.init.LogbackManager;
 import org.seedstack.seed.core.internal.init.NuunManager;
-import org.seedstack.seed.core.internal.init.SeedConfigLoader;
 import org.seedstack.seed.core.utils.SeedReflectionUtils;
 import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
@@ -44,13 +44,13 @@ import java.util.logging.LogManager;
  */
 public class Seed {
     private static final String SEED_PACKAGE_PREFIX = "org.seedstack.seed";
-    private static final Configuration bootstrapConfig = new SeedConfigLoader().buildBootstrapConfig();
 
     private static class Holder {
         private static final Seed INSTANCE = new Seed();
     }
 
     private final Map<String, DiagnosticManager> diagnosticManagers = new HashMap<String, DiagnosticManager>();
+    private final Coffig coffig = new Coffig();
     private final String seedVersion;
     private int initializationCount = 0;
     private ConsoleManager consoleManager;
@@ -140,8 +140,8 @@ public class Seed {
         return new DiagnosticManagerImpl();
     }
 
-    public static Configuration getConfiguration() {
-        return bootstrapConfig;
+    public static Coffig getConfiguration() {
+        return Holder.INSTANCE.coffig;
     }
 
     synchronized private void init() {
@@ -153,7 +153,7 @@ public class Seed {
             SLF4JBridgeHandler.removeHandlersForRootLogger();
             SLF4JBridgeHandler.install();
             if (isLogbackInUse()) {
-                logbackManager = new LogbackManager(bootstrapConfig);
+                logbackManager = new LogbackManager(coffig);
                 logbackManager.configure();
             }
 

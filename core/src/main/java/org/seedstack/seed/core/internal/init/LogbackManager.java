@@ -17,17 +17,15 @@ import ch.qos.logback.classic.util.ContextInitializer;
 import ch.qos.logback.core.ConsoleAppender;
 import ch.qos.logback.core.joran.spi.JoranException;
 import ch.qos.logback.core.joran.util.ConfigurationWatchListUtil;
-import org.apache.commons.configuration.Configuration;
+import org.seedstack.coffig.Coffig;
 import org.slf4j.LoggerFactory;
-
-import static ch.qos.logback.classic.Level.WARN;
 
 public class LogbackManager {
     private final LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
-    private final Configuration configuration;
+    private final Coffig coffig;
 
-    public LogbackManager(Configuration configuration) {
-        this.configuration = configuration;
+    public LogbackManager(Coffig coffig) {
+        this.coffig = coffig;
     }
 
     public synchronized void configure() {
@@ -67,7 +65,7 @@ public class LogbackManager {
             nuunLogger.setLevel(Level.WARN);
 
             Logger rootLogger = context.getLogger(Logger.ROOT_LOGGER_NAME);
-            rootLogger.setLevel(Level.toLevel(configuration.getString("org.seedstack.seed.logs.level"), Level.INFO));
+            rootLogger.setLevel(Level.toLevel(coffig.get("org.seedstack.seed.logs.level", String.class), Level.INFO));
             rootLogger.addAppender(logConsoleAppender);
         }
     }

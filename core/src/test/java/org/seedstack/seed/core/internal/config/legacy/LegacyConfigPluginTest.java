@@ -16,7 +16,6 @@ import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.seedstack.seed.core.internal.CorePlugin;
-import org.seedstack.seed.core.internal.init.SeedConfigLoader;
 import org.seedstack.seed.spi.configuration.ConfigurationLookup;
 
 import java.lang.annotation.Annotation;
